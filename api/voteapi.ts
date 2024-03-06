@@ -17,6 +17,8 @@ router.post("/vote",(req,res)=>{
     // if (voteRes.score === undefined || voteRes.score === null) {
     //     voteRes.score = 0;
     // }
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
 
     let sql = "INSERT INTO `vote`(`user_fk_id`,`up_fk_id`,`whowon`,`score`,`vote_date`) VALUES (?,?,?,?,?)";
     
@@ -25,7 +27,8 @@ router.post("/vote",(req,res)=>{
         voteRes.up_fk_id,
         voteRes.whowon,
         voteRes.score,
-        voteRes.vote_date
+        // voteRes.vote_date
+        formattedDate
 
     ]);
 
