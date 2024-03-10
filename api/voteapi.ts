@@ -13,10 +13,6 @@ export const router = express.Router();
 router.post("/vote",(req,res)=>{
 
     const voteRes : VoteRes = req.body;
-    // Check if the score is provided, otherwise set it to 0
-    // if (voteRes.score === undefined || voteRes.score === null) {
-    //     voteRes.score = 0;
-    // }
 
     let sql = "INSERT INTO `vote`(`user_fk_id`,`up_fk_id`,`whowon`,`score`,`vote_date`) VALUES (?,?,?,?,?)";
     
