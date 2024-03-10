@@ -44,8 +44,7 @@ router.get("/",(req,res)=>{
       Upload_img  
       LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
       LEFT JOIN User ON Upload_img.uid_user = User.uid 
-    GROUP BY 
-      Upload_img.upid; ` ;
+    ` ;
       conn.query(sql,(err,result)=>{
           if(err){
               res.json(err);
