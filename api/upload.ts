@@ -38,12 +38,14 @@ router.get("/",(req,res)=>{
   
   }else{
       const sql = `SELECT 
-      Upload_img.*, User.*, vote.*,
-      COALESCE(vote.score, 100) AS score
+    upid,Upload_img.*,User.*,
+    SUM(COALESCE(score, 100)) AS total_score
     FROM 
-      Upload_img  
-      LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
-      LEFT JOIN User ON Upload_img.uid_user = User.uid 
+    Upload_img
+     LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+    LEFT JOIN User ON Upload_img.uid_user = User.uid 
+    GROUP BY 
+    upid;
     ` ;
       conn.query(sql,(err,result)=>{
           if(err){
