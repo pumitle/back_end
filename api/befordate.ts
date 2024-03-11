@@ -15,18 +15,20 @@ router.get("/befordate", async (req, res) => {
         const formattedCurrentDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
 
         const sql = `
-            SELECT 
-                upid, Upload_img.*, User.*,
-                SUM(CASE WHEN DATE(vote_date) = '${formattedCurrentDate}' THEN 0 ELSE COALESCE(score, 100) END) AS total_score
-            FROM 
-                Upload_img
-                LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
-                LEFT JOIN User ON Upload_img.uid_user = User.uid 
-            GROUP BY 
-                upid
-            ORDER BY 
-                total_score DESC
-            LIMIT 10;
+        SELECT 
+        upid, Upload_img.*, User.*,
+        SUM(COALESCE(score, 100)) AS total_score
+        FROM 
+        Upload_img
+        LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+        LEFT JOIN User ON Upload_img.uid_user = User.uid 
+        WHERE
+        DATE(vote_date) != CURDATE()
+        GROUP BY 
+        upid
+        ORDER BY 
+        total_score DESC
+        LIMIT 10;
         `;
 
             conn.query(sql,(err,result)=>{
