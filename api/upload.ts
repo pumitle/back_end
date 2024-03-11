@@ -45,7 +45,11 @@ router.get("/",(req,res)=>{
      LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
     LEFT JOIN User ON Upload_img.uid_user = User.uid 
     GROUP BY 
-    upid;
+    upid
+    ORDER BY 
+    total_score DESC
+    LIMIT 10;
+    
     ` ;
       conn.query(sql,(err,result)=>{
           if(err){
@@ -58,3 +62,24 @@ router.get("/",(req,res)=>{
   }
   
   });
+
+//   SELECT 
+//   Upload_img.upid,
+//   Upload_img.img_car,
+//   Upload_img.name_img,
+//   Upload_img.detail,
+//   User.username,
+//   SUM(COALESCE(vote.score, 100)) AS total_score
+// FROM 
+//   Upload_img
+//   LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+//   LEFT JOIN User ON Upload_img.uid_user = User.uid 
+// GROUP BY 
+//   Upload_img.upid, 
+//   Upload_img.img_car,
+//   Upload_img.name_img,
+//   Upload_img.detail,
+//   User.username
+// ORDER BY 
+//   total_score DESC
+// LIMIT 10;
