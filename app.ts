@@ -4,6 +4,7 @@ import { router as upload } from "./api/upload";
 import { router as vote } from "./api/voteapi";
 import { router as upimg } from "./api/uploadimg";
 import { router as imgsert } from "./api/insertimg";
+import { router as befordata } from "./api/befordate";
 import bodyParser from "body-parser";
 const cors = require('cors');
 
@@ -21,6 +22,7 @@ app.use(bodyParser.text());
 app.use(bodyParser.json());
 app.use("/user" , votecars);
 app.use("/dataup" , upload);
+app.use("/befor" , befordata);
 app.use("/voteapi" , vote);
 app.use("/voteapi" ,imgsert);
 app.use("/upimg" , upimg);
