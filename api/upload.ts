@@ -63,6 +63,7 @@ router.get("/",(req,res)=>{
   
   });
 
+  ///
   router.get("/noone",(req,res)=>{
   
     if(req.query.id){
@@ -96,6 +97,73 @@ router.get("/",(req,res)=>{
   }
   
   });
+
+
+//get data one car 
+  router.get("/detailcar/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = `
+        SELECT 
+            upid, Upload_img.*, User.*,
+            SUM(COALESCE(score, 100)) AS total_score
+        FROM 
+            Upload_img
+            LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+            LEFT JOIN User ON Upload_img.uid_user = User.uid 
+        WHERE 
+            upid = ?
+        GROUP BY 
+            upid;
+    `;
+
+    conn.query(sql, [id], (err, result) => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+router.get("/rewind/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = `
+    SELECT 
+    Upload_img.upid, 
+    Upload_img.*, 
+    User.*, 
+    SUM(COALESCE(vote.score, 100)) AS total_score,
+    DATE(vote.vote_date) AS vote_date
+FROM 
+    Upload_img
+    LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+    LEFT JOIN User ON Upload_img.uid_user = User.uid 
+WHERE 
+    Upload_img.upid = ?
+    AND DATE(vote.vote_date) <= CURDATE() -- เลือกเฉพาะวันที่น้อยกว่าหรือเท่ากับวันปัจจุบัน
+    AND DATE(vote.vote_date) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) -- และมากกว่าหรือเท่ากับ 7 วันก่อนหน้านี้
+GROUP BY 
+    Upload_img.upid, DATE(vote.vote_date)
+ORDER BY
+    DATE(vote.vote_date) DESC;
+    `;
+
+    conn.query(sql, [id], (err, result) => {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+
+
+
+
+
 
 //   SELECT 
 //   Upload_img.upid,
