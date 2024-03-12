@@ -109,4 +109,28 @@ router.post("/login",  (req, res) => {
 });
 
 
+//Get car by id user
+router.get("/profile/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = `
+  SELECT 
+  Upload_img.*, 
+  SUM(COALESCE(vote.score, 100)) AS total_score
+  FROM 
+  User
+  LEFT JOIN Upload_img ON Upload_img.uid_user = User.uid 
+  LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+  WHERE 
+  User.uid = ?
+  GROUP BY 
+  User.uid, Upload_img.upid
+  `;
 
+  conn.query(sql, [id], (err, result) => {
+      if (err) {
+          res.json(err);
+      } else {
+          res.json(result);
+      }
+  });
+});
