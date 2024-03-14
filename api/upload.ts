@@ -160,11 +160,6 @@ ORDER BY
 
 
 
-
-
-
-
-
 //   SELECT 
 //   Upload_img.upid,
 //   Upload_img.img_car,
