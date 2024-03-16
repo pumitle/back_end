@@ -41,3 +41,44 @@ router.get("/befordate", async (req, res) => {
             });
     }
 });
+
+
+router.get("/top10rankbefor", (req, res) => {
+    const currentDate = new Date();
+    const sql = `
+      SELECT 
+        upid,
+        Upload_img.*,
+        User.*,
+        SUM(COALESCE(score, 100)) AS total_score
+      FROM 
+        Upload_img
+      LEFT JOIN 
+        vote ON Upload_img.upid = vote.up_fk_id 
+      LEFT JOIN 
+        User ON Upload_img.uid_user = User.uid 
+        WHERE 
+        DATE(vote_date) != CURDATE()
+      GROUP BY 
+        upid
+      ORDER BY 
+        total_score DESC
+      LIMIT 10;
+    `;
+    
+    conn.query(sql, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        // เรียงลำดับอันดับตามคะแนนทั้งหมด
+        const rankedResult = result.map((item: any, index: any) => {
+          return {
+            ...item,
+            rank: index + 1 // เพิ่มข้อมูลตำแหน่งอันดับลงในผลลัพธ์
+          };
+        });
+        
+        res.json(rankedResult); // ส่งผลลัพธ์ที่มีข้อมูลตำแหน่งอันดับกลับไป
+      }
+    });
+  });
