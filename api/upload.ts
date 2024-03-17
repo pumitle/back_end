@@ -12,8 +12,10 @@ router.get("/", (req, res) => {
     const name = req.query.name;
     res.send(`Show id ${id} ${name}`);
   } else {
-    const sql =
-      "select Upload_img.*, vote.*, COALESCE(vote.score, 100) AS score from Upload_img LEFT JOIN vote ON  Upload_img.upid = vote.up_fk_id";
+    const sql = `SELECT Upload_img.*, SUM(COALESCE(vote.score, 100)) AS score
+                 FROM Upload_img
+                 LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id
+                 GROUP BY Upload_img.upid`;
     conn.query(sql, (err, result) => {
       if (err) {
         res.json(err);
@@ -144,7 +146,7 @@ ORDER BY
 });
 
 router.get("/top10rank", (req, res) => {
-    const sql = `
+  const sql = `
       SELECT 
         upid,
         Upload_img.*,
@@ -162,24 +164,24 @@ router.get("/top10rank", (req, res) => {
         total_score DESC
       LIMIT 10;
     `;
-    
-    conn.query(sql, (err, result) => {
-      if (err) {
-        res.json(err);
-      } else {
-        // เรียงลำดับอันดับตามคะแนนทั้งหมด
-        const rankedResult = result.map((item: any, index: any) => {
-          return {
-            ...item,
-            rank: index + 1 // เพิ่มข้อมูลตำแหน่งอันดับลงในผลลัพธ์
-          };
-        });
-        
-        res.json(rankedResult); // ส่งผลลัพธ์ที่มีข้อมูลตำแหน่งอันดับกลับไป
-      }
-    });
+
+  conn.query(sql, (err, result) => {
+    if (err) {
+      res.json(err);
+    } else {
+      // เรียงลำดับอันดับตามคะแนนทั้งหมด
+      const rankedResult = result.map((item: any, index: any) => {
+        return {
+          ...item,
+          rank: index + 1, // เพิ่มข้อมูลตำแหน่งอันดับลงในผลลัพธ์
+        };
+      });
+
+      res.json(rankedResult); // ส่งผลลัพธ์ที่มีข้อมูลตำแหน่งอันดับกลับไป
+    }
   });
-  
+});
+
 //   SELECT
 //   Upload_img.upid,
 //   Upload_img.img_car,
