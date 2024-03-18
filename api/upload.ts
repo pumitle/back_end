@@ -44,7 +44,6 @@ router.get("/detail", (req, res) => {
         ORDER BY 
         total_score DESC
         LIMIT 10;
-        
         `;
     conn.query(sql, (err, result) => {
       if (err) {
@@ -203,8 +202,7 @@ router.get("/top10rank", (req, res) => {
       GROUP BY 
         upid
       ORDER BY 
-        total_score DESC
-      LIMIT 10;
+        total_score DESC;
     `;
 
   conn.query(sql, (err, result) => {
