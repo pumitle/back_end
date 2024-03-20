@@ -6,7 +6,8 @@ import { router as upimg } from "./api/uploadimg";
 import { router as imgsert } from "./api/insertimg";
 import { router as befordata } from "./api/befordate";
 import bodyParser from "body-parser";
-const cors = require('cors');
+// const cors = require('cors');
+import cors from "cors";
 
 export const app = express();
 
