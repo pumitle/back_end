@@ -169,6 +169,6 @@ router.put("/edit/:id",async(req,res)=>{
     ]);
     conn.query(sql,(err,result)=>{
       if(err) throw err;
-      res.status(201).json({ affected_row: result.affectedRow});
+      res.status(201).json({ affected_row : result.affectedRow });
     });
 });
