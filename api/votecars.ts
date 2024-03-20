@@ -1,7 +1,10 @@
 import express  from "express";
-import { conn } from "../dbconn";
+import { conn,queryAsync } from "../dbconn";
 import jwt , { Secret, GetPublicKeyOrSecret } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { UploadResult } from "firebase/storage";
+import mysql from "mysql";
+import { UserResponese } from "../model/user_req";
 export const router = express.Router();
 
 
@@ -133,4 +136,39 @@ router.get("/profile/:id", (req, res) => {
           res.json(result);
       }
   });
+});
+
+
+///put edit user detail
+router.put("/edit/:id",async(req,res)=>{
+
+  let id = req.params.id;
+  let user: UserResponese = req.body;
+  
+
+  let sql='select * from User where uid = ?';
+  sql = mysql.format(sql,[id]);
+
+  const result = await queryAsync(sql);
+  const jsonStr = JSON.stringify(result);
+  const jsonObj = JSON.parse(jsonStr);
+  const userRes: UserResponese = jsonObj[0];
+
+  const updateuser = {...userRes, ...user};
+
+
+   sql =  "update  `User` set `username`=?, `email`=?, `password`=?, `mobile_number`=?, `url_user`=?, `img_user`=? where `uid`=?";
+  sql = mysql.format(sql ,[
+    updateuser.username,
+    updateuser.email,
+    updateuser.password,
+    updateuser.mobile_number,
+    updateuser.url_user,
+    updateuser.img_user,
+    id
+    ]);
+    conn.query(sql,(err,result)=>{
+      if(err) throw err;
+      res.status(201).json({ affected_row: result.affectedRow});
+    });
 });

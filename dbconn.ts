@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import util from 'util';
 
 export const conn = mysql.createPool(
     {
@@ -9,3 +10,5 @@ export const conn = mysql.createPool(
         database:"web66_65011212026"
     }
 );
+
+export const queryAsync = util.promisify(conn.query).bind(conn);
