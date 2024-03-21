@@ -118,7 +118,7 @@ router.get("/profile/:id", (req, res) => {
   const sql = `
   SELECT 
   Upload_img.*, 
-  SUM(COALESCE(vote.score, 0)) AS total_score
+  SUM(COALESCE(vote.score, 100)) AS total_score
   FROM 
   User
   LEFT JOIN Upload_img ON Upload_img.uid_user = User.uid 

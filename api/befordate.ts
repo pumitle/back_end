@@ -17,7 +17,7 @@ router.get("/befordate", async (req, res) => {
         const sql = `
         SELECT 
         upid, Upload_img.*, User.*,
-        SUM(COALESCE(score, 0)) AS total_score
+        SUM(COALESCE(score, 100)) AS total_score
         FROM 
         Upload_img
         LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
@@ -50,7 +50,7 @@ router.get("/top10rankbefor", (req, res) => {
         upid,
         Upload_img.*,
         User.*,
-        SUM(COALESCE(score, 0)) AS total_score
+        SUM(COALESCE(score, 100)) AS total_score
       FROM 
         Upload_img
       LEFT JOIN 
