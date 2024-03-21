@@ -172,3 +172,21 @@ router.put("/edit/:id",async(req,res)=>{
       res.status(201).json({ affected_row : result.affectedRow });
     });
 });
+
+
+///Delete cars detail
+router.delete("/del/:id",async(req,res)=>{
+  let id = req.params.id;
+
+  conn.query("delete from vote where up_fk_id = ?", [id], (err, result) => {
+    if (err) throw err;
+    
+    conn.query("DELETE FROM  Upload_img WHERE upid = ?", [id], (err, result) => {
+      if (err) throw err;
+      
+      res.status(200).json({ affected_row: result.affectedRows });
+    });
+ });
+
+});
+
