@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
     const name = req.query.name;
     res.send(`Show id ${id} ${name}`);
   } else {
-    const sql = `SELECT Upload_img.*, SUM(COALESCE(vote.score, 100)) AS score
+    const sql = `SELECT Upload_img.*, SUM(COALESCE(vote.score, 0)) AS score
                  FROM Upload_img
                  LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id
                  GROUP BY Upload_img.upid`;
@@ -34,7 +34,7 @@ router.get("/detail", (req, res) => {
   } else {
     const sql = `SELECT 
         upid,Upload_img.*,User.*,
-        SUM(COALESCE(score, 100)) AS total_score
+        SUM(COALESCE(score, 0)) AS total_score
         FROM 
         Upload_img
         LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
@@ -64,7 +64,7 @@ router.get("/noone", (req, res) => {
   } else {
     const sql = `SELECT 
     upid,Upload_img.*,User.*,
-    SUM(COALESCE(score, 100)) AS total_score
+    SUM(COALESCE(score, 0)) AS total_score
     FROM 
     Upload_img
      LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
@@ -92,7 +92,7 @@ router.get("/detailcar/:id", (req, res) => {
   const sql = `
         SELECT 
             upid, Upload_img.*, User.*,
-            SUM(COALESCE(score, 100)) AS total_score
+            SUM(COALESCE(score, 0)) AS total_score
         FROM 
             Upload_img
             LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
@@ -154,10 +154,10 @@ router.get("/rewind/:id", (req, res) => {
   DATE(vote.vote_date) AS vote_date,
   CASE 
       WHEN DATE(vote.vote_date) = (SELECT MIN(DATE(v1.vote_date)) FROM vote v1 WHERE v1.up_fk_id = Upload_img.upid) 
-          THEN SUM(COALESCE(vote.score, 100))
+          THEN SUM(COALESCE(vote.score, 0))
       ELSE 
           SUM(COALESCE(vote.score, 100)) + (
-              SELECT SUM(COALESCE(v1.score, 100))
+              SELECT SUM(COALESCE(v1.score, 0))
               FROM vote v1
               WHERE Upload_img.upid = v1.up_fk_id 
                   AND DATE(v1.vote_date) < DATE(vote.vote_date)
@@ -192,7 +192,7 @@ router.get("/top10rank", (req, res) => {
         upid,
         Upload_img.*,
         User.*,
-        SUM(COALESCE(score, 100)) AS total_score
+        SUM(COALESCE(score, 0)) AS total_score
       FROM 
         Upload_img
       LEFT JOIN 
@@ -233,7 +233,7 @@ router.get("/databyuser/:user_id", (req, res) => {
       upid,
       Upload_img.*,
       User.*,
-      SUM(COALESCE(score, 100)) AS total_score
+      SUM(COALESCE(score, 0)) AS total_score
     FROM 
       Upload_img
     LEFT JOIN 
