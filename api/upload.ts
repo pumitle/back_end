@@ -173,7 +173,6 @@ GROUP BY
   Upload_img.upid, DATE(vote.vote_date), vote_date -- รวมคะแนนตามวันที่
 ORDER BY
   DATE(vote.vote_date) DESC;
-
     `;
 
   conn.query(sql, [id], (err, result) => {

@@ -5,6 +5,8 @@ import { Request, Response, NextFunction } from 'express';
 import { UploadResult } from "firebase/storage";
 import mysql from "mysql";
 import { UserResponese } from "../model/user_req";
+import { ValueX } from "../model/user_req";
+
 export const router = express.Router();
 
 
@@ -189,4 +191,25 @@ router.delete("/del/:id",async(req,res)=>{
  });
 
 });
+
+
+
+////Update ค่า x
+router.put("/numberx/:id",(req,res)=>{
+  let id = req.params.id;
+  let numX: ValueX = req.body;
+  let sql = " update  `ValueX` set `X`=? where `id_X`=?";
+  sql = mysql.format(sql,[
+    numX.X,
+    id
+  ]);
+  conn.query(sql,(err,result) =>{
+      if(err) throw err;
+      res.status(201).json({ affected_row: result.affectedRows });
+  });
+
+});
+
+
+
 

@@ -24,3 +24,7 @@ export interface VoteRes {
     vote_date:  Date;
 }
 
+export interface ValueX {
+    id_X: number;
+    X:   number;
+}
