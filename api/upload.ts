@@ -73,6 +73,35 @@ router.get("/detail", (req, res) => {
   }
 });
 
+////rank ทุกอันอับ
+router.get("/rankalldetail", (req, res) => {
+  if (req.query.id) {
+    const id = req.query.id;
+    const name = req.query.name;
+    res.send(`Show id ${id} ${name}`);
+  } else {
+    const sql = `SELECT 
+        upid,Upload_img.*,User.*,
+        SUM(COALESCE(score, 100)) AS total_score
+        FROM 
+        Upload_img
+        LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id 
+        LEFT JOIN User ON Upload_img.uid_user = User.uid 
+        GROUP BY 
+        upid
+        ORDER BY 
+        total_score DESC
+        `;
+    conn.query(sql, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(result);
+      }
+    });
+  }
+});
+
 ///
 router.get("/noone", (req, res) => {
   if (req.query.id) {
