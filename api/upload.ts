@@ -12,9 +12,10 @@ router.get("/", (req, res) => {
     const name = req.query.name;
     res.send(`Show id ${id} ${name}`);
   } else {
-    const sql = `SELECT Upload_img.*, SUM(COALESCE(vote.score, 100)) AS score
+    const sql = `SELECT User.*,Upload_img.*, SUM(COALESCE(vote.score, 100)) AS score
                  FROM Upload_img
                  LEFT JOIN vote ON Upload_img.upid = vote.up_fk_id
+                 LEFT JOIN User ON Upload_img.uid_user = User.uid 
                  GROUP BY Upload_img.upid`;
     conn.query(sql, (err, result) => {
       if (err) {
