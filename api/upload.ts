@@ -44,6 +44,21 @@ router.get("/userAll", (req, res) => {
   }
 });
 
+
+router.get("/search",(req,res)=>{
+  conn.query(
+    "select * from User where (uid IS NULL OR uid = ?) OR (username IS NULL OR username like ?)",
+    [ req.query.id, "%" + req.query.name + "%"],
+    (err, result) => {
+    if (err) throw err;
+      res.json(result);
+    }
+  );
+});
+
+
+
+
 router.get("/detail", (req, res) => {
   if (req.query.id) {
     const id = req.query.id;
