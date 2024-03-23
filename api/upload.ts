@@ -27,6 +27,23 @@ router.get("/", (req, res) => {
   }
 });
 
+router.get("/userAll", (req, res) => {
+  if (req.query.id) {
+    const id = req.query.id;
+    const name = req.query.name;
+    res.send(`Show id ${id} ${name}`);
+  } else {
+    const sql = `SELECT * FROM User `;
+    conn.query(sql, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(result);
+      }
+    });
+  }
+});
+
 router.get("/detail", (req, res) => {
   if (req.query.id) {
     const id = req.query.id;
