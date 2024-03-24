@@ -225,5 +225,18 @@ router.get("/valuex/:id",(req,res)=>{
 
 
 
-
+////Upadat Type User ให้เป็น Admin หรือ user
+router.put("/type/:id",(req,res)=>{
+  let id = req.params.id;
+  let user = req.body;
+  let sql = "UPDATE `User` SET `type` = CASE WHEN ? = 'Admin' THEN 'Admin' ELSE 'User' END WHERE `uid`=?";
+  sql = mysql.format(sql,[
+    user.type,
+    id
+  ]);
+  conn.query(sql,(err,result) =>{
+      if(err) throw err;
+      res.status(201).json({ affected_row: result.affectedRows });
+  });
+});
 
