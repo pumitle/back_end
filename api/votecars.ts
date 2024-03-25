@@ -240,3 +240,7 @@ router.put("/type/:id",(req,res)=>{
   });
 });
 
+
+
+
+
