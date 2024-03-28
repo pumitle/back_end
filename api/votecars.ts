@@ -210,6 +210,7 @@ router.put("/numberx/:id",(req,res)=>{
 
 });
 
+
 router.get("/valuex/:id",(req,res)=>{
   let id = req.params.id;
   const sql = `select * from ValueX where id_X = ?`;
